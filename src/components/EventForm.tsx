@@ -90,45 +90,35 @@ const EventForm = () => {
   async function onSubmit(values: z.infer<typeof createEventSchema>) {
     let productImages: any = [];
     try {
-      const promise =  Promise.all(
-        fileStates.map(async (addedFileState) => {
-          const res = await edgestore.publicFiles.upload({
-            // @ts-ignore
-            file: addedFileState.file,
-            onProgressChange: async (progress) => {
-              updateFileProgress(addedFileState.key, progress);
-              console.log(progress);
-              if (progress === 100) {
-                // Wait 1 second before setting to COMPLETE
-                // to display 100% progress bar
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-                updateFileProgress(addedFileState.key, "COMPLETE");
-              }
-            },
-          });
-          
-      
-          console.log(res);
-          productImages.push(res.url);
-        })
-      );
-
-      toast.promise(promise, {
-        loading: 'Creating ...',
-        success:"Created .",
-        error: 'Failed To Created .',
-        position:"top-center",
-        duration:2000
-
-      });
-      values.imageUrl = productImages;
+      if(fileStates.length > 0){
+        await Promise.all(
+          fileStates.map(async (addedFileState) => {
+            const res = await edgestore.publicFiles.upload({
+              // @ts-ignore
+              file: addedFileState.file,
+              onProgressChange: async (progress) => {
+                updateFileProgress(addedFileState.key, progress);
+                console.log(progress);
+                if (progress === 100) {
+                  // Wait 1 second before setting to COMPLETE
+                  // to display 100% progress bar
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
+                  updateFileProgress(addedFileState.key, "COMPLETE");
+                }
+              },
+            });
+            console.log(res);
+            productImages.push(res.url);
+          })
+        )
+        values.imageUrl = productImages;
+      }
       console.log(values); // Now logs the updated values
+      // toast.success("Event Is Created")
     } catch (err) {
       console.error("Error during file uploads:", err);
     }
-
   }
-
 
 
   return (
