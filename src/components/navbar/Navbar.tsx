@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 w-full p-6 bg-purple-600/10 backdrop-blur-sm",
+        "fixed top-0 w-full p-6  backdrop-blur-sm",
         isScroll && "shadow-sm border-b "
       )}
     >

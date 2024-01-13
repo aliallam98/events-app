@@ -3,6 +3,7 @@ import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Spinner } from "../Spinner";
 import NavMobLinks from "./NavMobLinks";
+import { Button } from "../ui/button";
 
 const UserButtons = () => {
   const { isLoaded, isSignedIn } = useUser();
@@ -17,10 +18,15 @@ const UserButtons = () => {
         )}
       </SignedIn>
       <SignedOut>
-        <Link href={"/sign-in"}>Login</Link>
+        <Link href={"/sign-in"}>
+          <Button
+          variant={"ghost"}
+          className="hover:bg-primary/5"
+          >Login</Button>
+        </Link>
       </SignedOut>
 
-      <NavMobLinks/>
+      <NavMobLinks />
     </div>
   );
 };
