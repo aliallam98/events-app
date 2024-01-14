@@ -3,12 +3,9 @@ export default authMiddleware({
     publicRoutes:[
         "/",
         "/api/webhooks/(.*)",
-        "/api/edgestore/"
+        "/api/edgestore/(.*)"
     ],
-    ignoredRoutes: [
-      '/api/webhook/clerk',
-      '/api/edgestore'
-    ]
+
 });
  
 export const config = {
