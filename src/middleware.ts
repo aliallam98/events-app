@@ -5,11 +5,6 @@ export default authMiddleware({
         "/api/webhook/clerk",
         "/api/edgestore/(.*)"
     ],
-    ignoredRoutes: [
-      '/api/webhook/clerk',
-      '/api/webhook/stripe',
-      '/api/edgestore/(.*)'
-    ]
 
 });
  
