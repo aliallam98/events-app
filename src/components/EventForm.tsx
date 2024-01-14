@@ -18,21 +18,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 
 import { useState } from "react";
 import { CalendarIcon } from "lucide-react";
@@ -41,6 +27,10 @@ import Image from "next/image";
 import { FileState, MultiImageDropzone } from "./MultiImageDropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import { toast } from "sonner";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import CategorySelect from "./CategorySelect";
 
 const EventForm = () => {
   const [fileStates, setFileStates] = useState<FileState[]>([]);
@@ -59,16 +49,6 @@ const EventForm = () => {
     });
   }
 
-  const [category, setCategory] = useState([
-    {
-      id: 1,
-      title: "One",
-    },
-    {
-      id: 2,
-      title: "Two",
-    },
-  ]);
   const form = useForm<z.infer<typeof createEventSchema>>({
     resolver: zodResolver(createEventSchema),
     defaultValues: {
@@ -90,7 +70,7 @@ const EventForm = () => {
   async function onSubmit(values: z.infer<typeof createEventSchema>) {
     let productImages: any = [];
     try {
-      if(fileStates.length > 0){
+      if (fileStates.length > 0) {
         await Promise.all(
           fileStates.map(async (addedFileState) => {
             const res = await edgestore.publicFiles.upload({
@@ -110,7 +90,7 @@ const EventForm = () => {
             console.log(res);
             productImages.push(res.url);
           })
-        )
+        );
         values.imageUrl = productImages;
       }
       console.log(values); // Now logs the updated values
@@ -119,7 +99,6 @@ const EventForm = () => {
       console.error("Error during file uploads:", err);
     }
   }
-
 
   return (
     <Form {...form}>
@@ -146,21 +125,9 @@ const EventForm = () => {
           name="category"
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {category.map((c) => (
-                    <SelectItem key={c.id} value={`${c.id}`}>
-                      {c.title}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
+              <FormControl>
+                <CategorySelect onChangeHandler={field.onChange} value={field.value} />
+              </FormControl>
               <FormMessage className="absolute" />
             </FormItem>
           )}
@@ -184,13 +151,13 @@ const EventForm = () => {
           )}
         />
 
+        {/* File */}
         <FormField
           control={form.control}
           name="imageUrl"
           render={({ field }) => (
             <FormItem className="flex justify-center">
               <FormControl>
-                {/* File */}
                 <MultiImageDropzone
                   className="h-[50px] w-[50px]  sm:h-[80px] sm:w-[80px] md:h-[150px] md:w-[150px] "
                   {...field}
@@ -215,37 +182,17 @@ const EventForm = () => {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Start Date Time</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                {/* <CalendarIcon  size={18} className="relative left-48 top-[37px] z-50 text-muted-foreground"/> */}
+                <FormControl>
+                  <DatePicker
+                    className="border rounded-md p-2 outline-none"
+                    selected={field.value}
+                    onChange={field.onChange}
+                    showTimeSelect
+                    dateFormat="Pp"
+                    minDate={new Date()}
+                  />
+                </FormControl>
                 <FormMessage className="absolute" />
               </FormItem>
             )}
@@ -256,37 +203,17 @@ const EventForm = () => {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>End Date Time</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                {/* <CalendarIcon  size={18} className="relative left-48 top-[37px] z-50 text-muted-foreground"/> */}
+                <FormControl>
+                  <DatePicker
+                    className="border rounded-md p-2 outline-none"
+                    selected={field.value}
+                    onChange={field.onChange}
+                    showTimeSelect
+                    dateFormat="Pp"
+                    minDate={new Date()}
+                  />
+                </FormControl>
                 <FormMessage className="absolute" />
               </FormItem>
             )}
@@ -346,13 +273,13 @@ const EventForm = () => {
             <FormItem className="relative">
               <Image
                 className="absolute top-1/2 -translate-y-1/2 ml-2"
-                alt="location icon"
+                alt="url icon"
                 width={25}
                 height={25}
                 src={"/assets/icons/link.svg"}
               />
               <FormControl>
-                <Input placeholder="Location" {...field} className="pl-10" />
+                <Input placeholder="Url" {...field} className="pl-10" />
               </FormControl>
               <FormMessage className="absolute" />
             </FormItem>
