@@ -12,6 +12,7 @@ export interface CreateCategoryResult {
     results?: any
   }
 export const createNewCategory = async ({categoryName}:CreateCategoryParams)=>{
+    // const sessionClamis = 
     
     await DBConnection()
 

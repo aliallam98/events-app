@@ -74,3 +74,5 @@ export const updateUser = async (
 //   handleError(error)
 // }
 // }
+
+export const deleteUser = async (id)=>{}

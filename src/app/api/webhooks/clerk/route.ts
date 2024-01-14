@@ -1,7 +1,7 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
-import { createUser, updateUser } from '@/lib/actions/user.actions'
+import { createUser, deleteUser, updateUser } from '@/lib/actions/user.actions'
 import { clerkClient } from '@clerk/nextjs'
 import { NextResponse } from 'next/server'
  
@@ -51,58 +51,57 @@ export async function POST(req: Request) {
   }
  
   // Get the ID and type
+  const { id } = evt.data;
   const eventType = evt.type;
-
-  if(eventType === "user.created"){
-    const { id,email_addresses,username,first_name,last_name,image_url } = evt.data;
+ 
+  if(eventType === 'user.created') {
+    const { id, email_addresses, image_url, first_name, last_name, username } = evt.data;
 
     const user = {
-        clerkId:id,
-        email:email_addresses[0].email_address,
-        username:username!,
-        firstName:first_name,
-        lastName:last_name,
-        image:image_url
+      clerkId: id,
+      email: email_addresses[0].email_address,
+      username: username!,
+      firstName: first_name,
+      lastName: last_name,
+      image: image_url,
     }
 
-    const newUser = await createUser(user)
+    const newUser = await createUser(user);
 
-    if(newUser?.success){
-      await clerkClient.users.updateUserMetadata(id,{
-        publicMetadata:{
-          userId : newUser.results._id
+    if(newUser) {
+      await clerkClient.users.updateUserMetadata(id, {
+        publicMetadata: {
+          userId: newUser.results._id
         }
       })
-      return NextResponse.json(newUser,{status:201})
     }
+
+    return NextResponse.json({ message: 'OK', user: newUser })
   }
 
-
-  if(eventType === "user.updated"){
-    const { id,username,first_name,last_name,image_url } = evt.data;
+  if (eventType === 'user.updated') {
+    const {id, image_url, first_name, last_name, username } = evt.data
 
     const user = {
-        username:username!,
-        firstName:first_name,
-        lastName:last_name,
-        image:image_url
+      firstName: first_name,
+      lastName: last_name,
+      username: username!,
+      image: image_url,
     }
 
-    const updatedUser = await updateUser(id,user)
+    const updatedUser = await updateUser(id, user)
 
-    if(updatedUser?.success){
-      return NextResponse.json(updatedUser,{status:200})
-    }
+    return NextResponse.json({ message: 'OK', user: updatedUser })
   }
 
-  // if (eventType === 'user.deleted') {
-  //   const { id } = evt.data
+  if (eventType === 'user.deleted') {
+    const { id } = evt.data
 
-  //   const deletedUser = await deleteUser(id!)
+    const deletedUser = await deleteUser(id!)
 
-  //   if(deletedUser.success)
-  //   return NextResponse.json({ message: 'OK', user: deletedUser })
-  // }
+    return NextResponse.json({ message: 'OK', user: deletedUser })
+  }
  
   return new Response('', { status: 200 })
 }
+ 
