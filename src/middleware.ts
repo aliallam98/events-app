@@ -6,13 +6,8 @@ export default authMiddleware({
     '/events/:id',
     '/api/webhook/clerk',
     '/api/webhook/stripe',
-    '/api/edgestore'
+    '/api/edgestore/init'
   ],
-  ignoredRoutes: [
-    '/api/webhook/clerk',
-    '/api/webhook/stripe',
-    '/api/edgestore'
-  ]
 });
  
 export const config = {
