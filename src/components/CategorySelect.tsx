@@ -46,10 +46,11 @@ const CategorySelect = ({ value, onChangeHandler }: any) => {
   const [category, setCategory] = useState<ICategory[]>([]);
 
   useEffect(() => {
-    const categoriesList = async () => {
-      await getAllCategories().then((list) => setCategory(list.results));
+    const getCategories = async () => {
+      const allCategories = await getAllCategories()
+      setCategory(allCategories.results)
     };
-    categoriesList();
+    getCategories();
   }, []);
 
   const form = useForm<z.infer<typeof createCategorySchema>>({

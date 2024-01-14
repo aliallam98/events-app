@@ -1,20 +1,15 @@
 import mongoose from "mongoose";
 
 const dataBaseUrl = process.env.MONGO_DB_URL as string
+let cached = (global as any).mongoose || { conn: null, promise: null };
+
 
 const DBConnection = async () => {
-  console.log(dataBaseUrl);
-
-  const cashed = (global as any).mongoose || { conn: null, promise: null };
   if (!dataBaseUrl) return;
 
-
-  if (cashed.conn) return cashed.conn;
-  console.log(cashed);
-  
-
-  cashed.promise =
-    cashed.promise ||
+  if (cached.conn) return cached.conn;
+  cached.promise =
+    cached.promise ||
     mongoose
       .connect(dataBaseUrl, {
         dbName: "Events-App",
@@ -22,6 +17,9 @@ const DBConnection = async () => {
       })
       .then(()=>console.log("DB Is Connected")).catch(()=>console.log("Failed To Connect")
       )
+
+      cached.conn = await cached.promise;
+      return cached
 };
 
 
