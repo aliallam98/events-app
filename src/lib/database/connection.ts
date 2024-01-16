@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 const dataBaseUrl = process.env.MONGO_DB_URL as string
 let cached = (global as any).mongoose || { conn: null, promise: null };
 
@@ -8,6 +9,7 @@ const DBConnection = async () => {
   if (!dataBaseUrl) return;
 
   if (cached.conn) return cached.conn;
+  
   cached.promise =
     cached.promise ||
     mongoose
@@ -19,7 +21,7 @@ const DBConnection = async () => {
       )
 
       cached.conn = await cached.promise;
-      return cached
+      return cached.conn
 };
 
 
