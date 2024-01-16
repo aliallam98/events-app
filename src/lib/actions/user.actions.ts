@@ -23,7 +23,7 @@ export const createUser = async (userData: CreateUserParams) => {
     return {
       success: true,
       message: "User Created",
-      results: newUser,
+      results: JSON.parse(JSON.stringify(newUser)),
     };
   } catch (error) {
     handleError(error);
