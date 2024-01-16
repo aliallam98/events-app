@@ -12,11 +12,18 @@ import { revalidatePath } from "next/cache";
 export const createUser = async (userData: CreateUserParams) => {
   try {
     await DBConnection();
-    const newUser = userModel.create(userData);
+    const isUserNameExist = await userModel.findOne({userName:userData.userName})
+    if(isUserNameExist)
+    return {
+      success: false,
+      message: "This Username Already Exist",
+    };
+
+    const newUser = await userModel.create(userData);
     return {
       success: true,
       message: "User Created",
-      results: JSON.parse(JSON.stringify(newUser)),
+      results: newUser,
     };
   } catch (error) {
     handleError(error);
@@ -36,7 +43,7 @@ export const updateUser = async (
     return {
       success: true,
       message: "User Created",
-      results: JSON.parse(JSON.stringify(updatedUser)),
+      results: updatedUser,
     };
   } catch (error) {
     handleError(error);
@@ -71,7 +78,7 @@ export const deleteUser = async (clerkId: string) => {
   const deletedUser = await userModel.findByIdAndDelete(id)
   revalidatePath('/') 
 
-  return deletedUser ? JSON.parse(JSON.stringify(deletedUser)) : null
+  return deletedUser ? deletedUser : null
 } catch (error) {
   handleError(error)
 }

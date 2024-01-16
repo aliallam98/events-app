@@ -21,7 +21,7 @@ export const createNewCategory = async ({categoryName}:CreateCategoryParams)=>{
 
     const newCategory : CreateCategoryResult = await categoryModel.create({title:categoryName})
 
-    return {success:true,message:"Done",results:JSON.parse(JSON.stringify(newCategory))}
+    return {success:true,message:"Done",results:newCategory}
 }
 
 
@@ -31,5 +31,5 @@ export const getAllCategories = async ()=>{
 
     const categories = await categoryModel.find({})
     
-    return {success:true,message:"Done",results:JSON.parse(JSON.stringify(categories))}
+    return {success:true,message:"Done",results: categories}
 }
