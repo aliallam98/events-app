@@ -3,7 +3,7 @@ export type CreateUserParams = {
     clerkId?: string
     firstName: string
     lastName: string
-    username: string
+    userName: string
     email?: string
     image: string
   }
@@ -77,25 +77,23 @@ export type CreateUserParams = {
   }
   
   export type Event = {
-    _id: string
-    title: string
-    description: string
-    price: string
-    isFree: boolean
-    imageUrl: string
-    location: string
-    startDateTime: Date
-    endDateTime: Date
-    url: string
+    _id: string;
+    title: string;
+    description: string;
+    location: string;
+    imageUrl?: string; // Optional field
+    price?: string; // Optional field
+    isFree: boolean;
+    startDateTime: string;
+    endDateTime: string;
+    url?: string; // Optional field
+    category: { _id: string; title: string };
     organizer: {
-      _id: string
-      firstName: string
-      lastName: string
-    }
-    category: {
-      _id: string
-      name: string
-    }
+      _id: string;
+      username: string;
+      firstName: string;
+      lastName: string;
+    };
   }
   
   // ====== CATEGORY PARAMS

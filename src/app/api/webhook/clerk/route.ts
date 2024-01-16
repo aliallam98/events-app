@@ -54,7 +54,7 @@ export async function POST(req: Request) {
   // Get the ID and type
   const eventType = evt.type;
   if (eventType === "user.created") {
-console.log("Working");
+    console.log(" Working");
 
     const { id, email_addresses, image_url, first_name, last_name, username } =
       evt.data;
@@ -62,7 +62,7 @@ console.log("Working");
     const user = {
       clerkId: id,
       email: email_addresses[0].email_address,
-      username: username!,
+      userName: username!,
       firstName: first_name,
       lastName: last_name,
       image: image_url,
@@ -87,7 +87,7 @@ console.log("Working");
     const user = {
       firstName: first_name,
       lastName: last_name,
-      username: username!,
+      userName: username!,
       image: image_url,
     };
 
@@ -98,7 +98,6 @@ console.log("Working");
 
   if (eventType === "user.deleted") {
     const { id } = evt.data;
-console.log("Working");
 
 
     const deletedUser = await deleteUser(id!);
@@ -108,3 +107,4 @@ console.log("Working");
 
   return new Response("", { status: 200 });
 }
+
