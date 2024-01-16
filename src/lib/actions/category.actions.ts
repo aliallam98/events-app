@@ -2,14 +2,14 @@
 
 import { CreateCategoryParams } from "@/types"
 import DBConnection from "../database/connection"
-import categoryModel from "../database/models/Category.Model"
+import categoryModel, { ICategory } from "../database/models/Category.Model"
 
 
 
 export interface CreateCategoryResult {
     success: boolean;
     message: string;
-    results?: any
+    results?: ICategory
   }
 export const createNewCategory = async ({categoryName}:CreateCategoryParams)=>{
     // const sessionClamis = 
@@ -19,7 +19,7 @@ export const createNewCategory = async ({categoryName}:CreateCategoryParams)=>{
     const isCategoryExist = await categoryModel.findOne({title:categoryName})
     if(isCategoryExist) return {success:false,message:"This Title Is Exist"}
 
-    const newCategory : CreateCategoryResult = await categoryModel.create({title:categoryName})
+    const newCategory : ICategory = await categoryModel.create({title:categoryName})
 
     return {success:true,message:"Done",results:newCategory}
 }
@@ -31,5 +31,5 @@ export const getAllCategories = async ()=>{
 
     const categories = await categoryModel.find({})
     
-    return {success:true,message:"Done",results: categories}
+    return {success:true,message:"Done",results: categories} 
 }

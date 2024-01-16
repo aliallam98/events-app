@@ -68,7 +68,7 @@ const CategorySelect = ({ value, onChangeHandler }: any) => {
 
       if (category.success) {
         resolve(category.message);
-        setCategory((prev)=>[...prev,category.results])
+        setCategory((prev)=>[...prev,category.results as ICategory])
         form.reset();
       } else {
         reject(category.message);
