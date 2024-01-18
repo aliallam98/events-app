@@ -8,7 +8,7 @@ import { IEvent } from "@/lib/database/models/Event.Model";
 import Checkout from "./Checkout";
 
 const CheckoutButtons = ({ event }: { event: IEvent }) => {
-  const isEventEnded = new Date(event.endDateTime) < new Date();
+  const isEventEnded = false //new Date(event.endDateTime) < new Date();
   const { user } = useUser();
   const userId = user?.publicMetadata.userId as string;
 

@@ -12,7 +12,6 @@ interface IProps {
 }
 
 const EventsCollection = ({ data, emptyTitle, subEmptyTitle, type }: IProps) => {
-  console.log(data);  
 
   return (
     <section className="py-10">

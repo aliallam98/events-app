@@ -18,7 +18,8 @@ const Card = ({ event, hidePrice, hasOrderLink }: IProps) => {
   const { sessionClaims } = auth();
   const userId = sessionClaims?.userId as string;
   const isEventCreator = userId === event._id.toString();
-  console.log(event);
+
+  
 
   return (
     <article

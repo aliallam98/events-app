@@ -23,8 +23,6 @@ const EventPage = async ({ params: { id } }: IParams) => {
   const relatedEvents = await getRelatedEvents(id, categoryId);
 
   const isFree = event.results.isFree;
-
-  console.log(EventTarget);
   
 
   return (

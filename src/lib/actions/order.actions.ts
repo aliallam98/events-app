@@ -58,7 +58,7 @@ export async function getOrdersByUser({ userId, limit = 3, page }: GetOrdersByUs
     await DBConnection()
 
     const skipAmount = (Number(page) - 1) * limit
-    const conditions = { buyer: userId }
+    const conditions = { buyerId: userId }
 
     const orders = await orderModel
       .find(conditions)
@@ -66,13 +66,14 @@ export async function getOrdersByUser({ userId, limit = 3, page }: GetOrdersByUs
       .skip(skipAmount)
       .limit(limit)
       .populate({
-        path: 'event',
+        path: 'eventId',
         model: eventModel,
         populate: {
           path: 'organizer',
           model: userModel,
-          select: '_id firstName lastName',
+          select: 'firstName lastName',
         },
+        
       })
 
     const ordersCount = await orderModel.distinct('event._id').countDocuments(conditions)
