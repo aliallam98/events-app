@@ -81,7 +81,7 @@ export type CreateUserParams = {
     title: string;
     description: string;
     location: string;
-    imageUrl?: string; // Optional field
+    imageUrl?: string[]; // Optional field
     price?: string; // Optional field
     isFree: boolean;
     startDateTime: string;
@@ -89,8 +89,7 @@ export type CreateUserParams = {
     url?: string; // Optional field
     category: { _id: string; title: string };
     organizer: {
-      _id: string;
-      username: string;
+      // _id: string;
       firstName: string;
       lastName: string;
     };
@@ -115,7 +114,6 @@ export type CreateUserParams = {
     eventId: string
     buyerId: string
     totalAmount: string
-    createdAt: Date
   }
   
   export type GetOrdersByEventParams = {

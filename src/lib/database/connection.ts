@@ -6,13 +6,15 @@ let cached = (global as any).mongoose || { conn: null, promise: null };
 
 
 const DBConnection = async () => {
+  console.log(dataBaseUrl);
+  
   if (!dataBaseUrl) return;
 
   if (cached.conn) return cached.conn;
   
   cached.promise =
     cached.promise ||
-    mongoose
+     await mongoose
       .connect(dataBaseUrl, {
         dbName: "Events-App",
         bufferCommands: false,

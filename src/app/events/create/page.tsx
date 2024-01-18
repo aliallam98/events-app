@@ -1,13 +1,15 @@
 import EventForm from "@/components/EventForm";
 import React from "react";
 
-const page = () => {
+const CreateEventPage = () => {
   return (
     <section className="mt-32">
       <h2 className="font-semibold text-xl text-center">Create An Event</h2>
-      <EventForm/>
+      <EventForm
+      type={"Create"}
+      />
     </section>
   );
 };
 
-export default page;
+export default CreateEventPage;

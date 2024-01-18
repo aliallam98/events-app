@@ -21,8 +21,6 @@ import { Button } from "../ui/button";
 
 const NavMobLinks = () => {
   const user = useUser();
-  console.log(user);
-
   const pathname = usePathname();
   return (
     <Sheet>

@@ -1,9 +1,13 @@
-import React from 'react'
+import Card from "@/components/events/Card";
+import React from "react";
 
-const page = () => {
+const EventsPage = () => {
+  const event = {}
   return (
-    <div>page</div>
-  )
-}
+    <div>
+      <h1>Discover All Events</h1>
+    </div>
+  );
+};
 
-export default page
+export default EventsPage;
