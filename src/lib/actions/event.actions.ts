@@ -1,6 +1,7 @@
 "use server";
 
 import DBConnection from "../database/connection";
+import categoryModel from "../database/models/Category.Model";
 import eventModel, { IEvent } from "../database/models/Event.Model";
 import userModel from "../database/models/User.Model";
 import { handleError } from "../utils";
@@ -45,7 +46,18 @@ export const createNewEvent = async (
 export const getEventById = async (id: String) => {
   await DBConnection();
 
-  const event = await eventModel.findById(id)
+  const event = await eventModel.findById(id).populate([
+    {
+      path:"categoryId",
+      model:categoryModel,
+      select:"title"
+    },
+    {
+      path:"organizer",
+      model:userModel,
+      select:"firstName lastName"
+    },
+  ])
 
   if (!event) return { success: true, message: "Cannot Find This Event" };
 
@@ -61,7 +73,11 @@ export const getRelatedEvents = async (id: String, categoryId: string) => {
   const events = await eventModel.find({
     $and: [{ _id: { $ne: id } }, { categoryId }],
   });
-  return { success: true, message: "Cannot Find This Event", results:  JSON.parse(JSON.stringify(events)) };
+  return {
+    success: true,
+    message: "Cannot Find This Event",
+    results: JSON.parse(JSON.stringify(events)),
+  };
 };
 
 export const updateEventById = async (
@@ -85,7 +101,7 @@ export const updateEventById = async (
     return {
       success: false,
       message: "Unauthorized",
-      results: JSON.parse(JSON.stringify(event)) ,
+      results: JSON.parse(JSON.stringify(event)),
     };
   } catch (error) {
     handleError(error);
@@ -115,10 +131,11 @@ export const getEventByUserId = async (userId: string) => {
   if (!isUserExist) return { success: false, message: "Cannot Find This User" };
 
   const events = await eventModel.find({ organizer: userId }).populate([
-    // {
-    //   path: "Category",
-    //   select: "title",
-    // },
+    {
+      path: "categoryId",
+      model: categoryModel,
+      select: "title",
+    },
     {
       path: "organizer",
       select: "firstName lastName",
@@ -136,8 +153,12 @@ export const getAllEvents = async () => {
 
   const events = await eventModel.find().populate([
     { path: "organizer", select: "firstName lastName" },
-    // { path: "categoryId", select: "title" },
+    { path: "categoryId", model: categoryModel, select: "title" },
   ]);
 
-  return { success: true, message: "Done", results:JSON.parse(JSON.stringify(events)) };
+  return {
+    success: true,
+    message: "Done",
+    results: JSON.parse(JSON.stringify(events)),
+  };
 };

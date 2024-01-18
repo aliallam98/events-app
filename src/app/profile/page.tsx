@@ -12,7 +12,6 @@ const ProfilePage = async () => {
   const { sessionClaims } = auth(); //use only in server com .
   const userId = sessionClaims?.userId as string;
   const myEvents  = await getEventByUserId(userId)
-  const data = []
   return (
     <>
       {/* My Tickets */}
@@ -22,7 +21,7 @@ const ProfilePage = async () => {
             <h3 className="font-bold text-xl md:text-3xl">My Tickets</h3>
             <Button>Discover More Events</Button>
           </div>
-          <EventsCollection
+          {/* <EventsCollection
             data={data}
             emptyTitle="No event tickets purchased yet"
             subEmptyTitle="No worries - plenty of exciting events to explore!"
@@ -30,7 +29,7 @@ const ProfilePage = async () => {
             limit={3}
             totalPages={1}
             type="My_Tickets"
-          />
+          /> */}
         </div>
       </section>
 
