@@ -3,7 +3,8 @@ import { Toaster, toast } from "sonner";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
+// className={inter.className}
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { EdgeStoreProvider } from "../lib/edgestore";
@@ -26,11 +27,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
+        <body>
           <EdgeStoreProvider>
             <Toaster />
             <Navbar />
-            {children}
+            <main className="mt-20  min-h-screen">{children}</main>
             <Footer />
           </EdgeStoreProvider>
         </body>

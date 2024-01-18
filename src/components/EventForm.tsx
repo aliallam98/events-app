@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import { Textarea } from "@/components/ui/textarea";
 
@@ -31,8 +32,20 @@ import { toast } from "sonner";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import CategorySelect from "./CategorySelect";
+import { Event } from "@/types";
+import { createNewEvent } from "@/lib/actions/event.actions";
+import { auth, useUser } from "@clerk/nextjs";
+import { IEvent } from "@/lib/database/models/Event.Model";
 
-const EventForm = () => {
+interface IProps {
+  type: string;
+  event?: Event;
+}
+
+const EventForm = ({ type ,event}: IProps) => {
+  const { user } = useUser();
+  const userId = user?.publicMetadata.userId as string;
+
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   const { edgestore } = useEdgeStore();
 
@@ -49,54 +62,66 @@ const EventForm = () => {
     });
   }
 
+  const eventDefaultValues = {
+    title: "",
+    categoryId: "",
+    description: "",
+    location: "",
+    imageUrl: [],
+    price: "",
+    isFree: false,
+    startDateTime: new Date(),
+    endDateTime: new Date(),
+    url: "",
+  };
+  const initValues =
+    event && type === "update"
+      ? {
+          ...event,
+          startDateTime: new Date(event.startDateTime),
+          endDateTime: new Date(event.endDateTime),
+        }
+      : eventDefaultValues;
+    console.log(event && type === "update");
+    console.log(initValues);
+
   const form = useForm<z.infer<typeof createEventSchema>>({
     resolver: zodResolver(createEventSchema),
-    defaultValues: {
-      title: "",
-      category: "",
-      description: "",
-      location: "",
-      imageUrl: [],
-      price: "",
-      isFree: false,
-      startDateTime: new Date(),
-      endDateTime: new Date(),
-      url: "",
-      categoryId: "",
-    },
+    defaultValues: initValues,
   });
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof createEventSchema>) {
-    let productImages: any = [];
-    try {
-      if (fileStates.length > 0) {
-        await Promise.all(
-          fileStates.map(async (addedFileState) => {
-            const res = await edgestore.publicFiles.upload({
-              // @ts-ignore
-              file: addedFileState.file,
-              onProgressChange: async (progress) => {
-                updateFileProgress(addedFileState.key, progress);
-                console.log(progress);
-                if (progress === 100) {
-                  // Wait 1 second before setting to COMPLETE
-                  // to display 100% progress bar
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
-                  updateFileProgress(addedFileState.key, "COMPLETE");
-                }
-              },
-            });
-            console.log(res);
-            productImages.push(res.url);
-          })
-        );
-        values.imageUrl = productImages;
+    if (type === "Create") {
+      let productImages: any = [];
+      try {
+        if (fileStates.length > 0) {
+          await Promise.all(
+            fileStates.map(async (addedFileState) => {
+              const res = await edgestore.publicFiles.upload({
+                // @ts-ignore
+                file: addedFileState.file,
+                onProgressChange: async (progress) => {
+                  updateFileProgress(addedFileState.key, progress);
+                  console.log(progress);
+                  if (progress === 100) {
+                    // Wait 1 second before setting to COMPLETE
+                    // to display 100% progress bar
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
+                    updateFileProgress(addedFileState.key, "COMPLETE");
+                  }
+                },
+              });
+              console.log(res);
+              productImages.push(res.url);
+            })
+          );
+          values.imageUrl = productImages;
+          await createNewEvent(values, userId);
+        }
+      } catch (err) {
+        console.error("Error during file uploads:", err);
       }
-      console.log(values); // Now logs the updated values
-      // toast.success("Event Is Created")
-    } catch (err) {
-      console.error("Error during file uploads:", err);
     }
   }
 
@@ -122,28 +147,13 @@ const EventForm = () => {
         {/* Category Select */}
         <FormField
           control={form.control}
-          name="category"
+          name="categoryId"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <CategorySelect onChangeHandler={field.onChange} value={field.value} />
-              </FormControl>
-              <FormMessage className="absolute" />
-            </FormItem>
-          )}
-        />
-
-        {/* Description Textarea */}
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Textarea
-                  placeholder="Description"
-                  className="resize-none"
-                  {...field}
+                <CategorySelect
+                  onChangeHandler={field.onChange}
+                  value={field.value}
                 />
               </FormControl>
               <FormMessage className="absolute" />
@@ -151,29 +161,49 @@ const EventForm = () => {
           )}
         />
 
-        {/* File */}
-        <FormField
-          control={form.control}
-          name="imageUrl"
-          render={({ field }) => (
-            <FormItem className="flex justify-center">
-              <FormControl>
-                <MultiImageDropzone
-                  className="h-[50px] w-[50px]  sm:h-[80px] sm:w-[80px] md:h-[150px] md:w-[150px] "
-                  {...field}
-                  value={fileStates}
-                  dropzoneOptions={{
-                    maxFiles: 6,
-                  }}
-                  onChange={(files) => {
-                    setFileStates(files);
-                  }}
-                />
-              </FormControl>
-              <FormMessage className="absolute" />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-1 gap-4">
+          {/* Description Textarea */}
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Textarea
+                    placeholder="Description"
+                    className="resize-none"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage className="absolute" />
+              </FormItem>
+            )}
+          />
+
+          {/* File */}
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem className="flex justify-center">
+                <FormControl>
+                  <MultiImageDropzone
+                    className="h-[50px] w-[50px]  sm:h-[80px] sm:w-[80px] md:h-[150px] md:w-[150px] "
+                    {...field}
+                    value={fileStates}
+                    dropzoneOptions={{
+                      maxFiles: 6,
+                    }}
+                    onChange={(files) => {
+                      setFileStates(files);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage className="absolute" />
+              </FormItem>
+            )}
+          />
+        </div>
         {/* Start Data */}
         <div className="flex items-center justify-between">
           <FormField
@@ -242,28 +272,47 @@ const EventForm = () => {
         />
 
         {/* Price Input */}
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem className="relative">
-              <Image
-                className="absolute top-1/2 -translate-y-1/2 ml-2"
-                alt="location icon"
-                width={25}
-                height={25}
-                src={"/assets/icons/dollar.svg"}
-              />
-              <FormControl>
-                <Input placeholder="price" {...field} className="pl-10 pr-20" />
-              </FormControl>
-              <span className="block bg-red-400 p-2 px-10 h-full absolute top-1/2 -translate-y-1/2 right-0  !m-0">
-                Is Free ?
-              </span>
-              <FormMessage className="absolute" />
-            </FormItem>
-          )}
-        />
+        <div className="relative flex items-center">
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem className="relative grow mt-0">
+                <Image
+                  className="absolute top-1/2 -translate-y-1/2 ml-2"
+                  alt="location icon"
+                  width={25}
+                  height={25}
+                  src={"/assets/icons/dollar.svg"}
+                />
+                <FormControl>
+                  <Input
+                    placeholder="price"
+                    {...field}
+                    className="pl-10 pr-20 !m-0"
+                  />
+                </FormControl>
+
+                <FormMessage className="absolute" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="isFree"
+            render={({ field }) => (
+              <FormItem className="absolute right-0 flex items-center space-x-3 space-y-0 h-full px-4 w-fit">
+                <FormLabel>Is Free ?</FormLabel>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
 
         {/* Url Input */}
         <FormField

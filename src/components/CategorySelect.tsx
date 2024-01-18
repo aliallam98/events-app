@@ -44,6 +44,8 @@ import { ICategory } from "@/lib/database/models/Category.Model";
 
 const CategorySelect = ({ value, onChangeHandler }: any) => {
   const [category, setCategory] = useState<ICategory[]>([]);
+  console.log(value);
+  
 
   useEffect(() => {
     const getCategories = async () => {

@@ -12,8 +12,7 @@ export interface CreateCategoryResult {
     results?: ICategory
   }
 export const createNewCategory = async ({categoryName}:CreateCategoryParams)=>{
-    // const sessionClamis = 
-    
+
     await DBConnection()
 
     const isCategoryExist = await categoryModel.findOne({title:categoryName})
@@ -21,7 +20,7 @@ export const createNewCategory = async ({categoryName}:CreateCategoryParams)=>{
 
     const newCategory : ICategory = await categoryModel.create({title:categoryName})
 
-    return {success:true,message:"Done",results:newCategory}
+    return {success:true,message:"Done",results:JSON.parse(JSON.stringify(newCategory))}
 }
 
 
@@ -31,5 +30,8 @@ export const getAllCategories = async ()=>{
 
     const categories = await categoryModel.find({})
     
-    return {success:true,message:"Done",results: categories} 
+
+    // JSON.parse(JSON.stringify(categories)) To Avoid 
+    // Warning: Only plain objects can be passed to Client Components from Server Components
+    return {success:true,message:"Done",results: JSON.parse(JSON.stringify(categories))}  
 }

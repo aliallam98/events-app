@@ -5,13 +5,13 @@ export interface IEvent extends Document {
   title: string;
   description: string;
   location: string;
-  imageUrl?: string; // Optional field
-  price?: string; // Optional field
+  imageUrl?: string[]; // Optional field
+  price: string; // Optional field
   isFree: boolean;
-  startDateTime: string;
-  endDateTime: string;
+  startDateTime: Date;
+  endDateTime: Date;
   url?: string; // Optional field
-  category: { _id: string; title: string };
+  categoryId: { _id: string; title: string };
   organizer: {
     _id: string;
     username: string;
@@ -24,18 +24,18 @@ const eventSchema = new Schema(
     title: { type: String, required: true, unique: true,},
     description: { type: String, required: true },
     location: { type: String, required: true},
-    imageUrl: String,
+    imageUrl: [String],
     price: String,
     isFree: { type: Boolean, default: false },
-    startDateTime: String,
-    endDateTime: String,
+    startDateTime: Date,
+    endDateTime: Date,
     url: String,
     categoryId: { type: Types.ObjectId, ref: "Category" },
     organizer: { type: Types.ObjectId, ref: "User", },
   },
   {
     timestamps: true,
-    strict:true
+    strict:true,
   }
 )
 eventSchema.index({ organizer:1, title:1,categoryId:1})

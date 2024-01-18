@@ -13,7 +13,6 @@ export interface IOrder extends Document {
     firstName: string;
     lastName: string;
   };
-  createdAt: Date;
 }
 
 const orderSchema = new Schema(
@@ -24,17 +23,18 @@ const orderSchema = new Schema(
       unique: true,
     },
     totalAmount: String,
-    event: {
+    eventId: {
       type: Types.ObjectId,
       ref: "Event",
     },
-    buyer: {
+    buyerId: {
       type: Types.ObjectId,
       ref: "User",
     },
   },
   {
     timestamps: true,
+    strict: true,
   }
 );
 

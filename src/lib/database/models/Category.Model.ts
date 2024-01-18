@@ -12,9 +12,11 @@ const categorySchema = new Schema(
   },
   {
     timestamps: true,
+    strict:true
   }
 );
 
 const categoryModel = models.Category || model("Category", categorySchema);
+
 
 export default categoryModel;

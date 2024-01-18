@@ -1,12 +1,15 @@
+import EventsCollection from "@/components/events/EventsCollection";
 import { Button } from "@/components/ui/button";
+import { getAllEvents } from "@/lib/actions/event.actions";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const events = await getAllEvents()
   return (
     <main className="h-full">
       <section className="h-[100vh]  md:h-[70vh] bg-primary/5 bg-contain ">
-        <div className="container grid grid-cols-1 md:grid-cols-2 mt-24 py-8">
+        <div className="container grid grid-cols-1 md:grid-cols-2 ">
           <div className="flex flex-col justify-center gap-4">
             <h1 className="font-bold text-4xl">Host, Connect, Celebrate: Your Events, Our Platform!</h1>
             <p className="text-2xl">
@@ -36,6 +39,15 @@ export default function Home() {
         <h2 className="font-bold text-4xl">
           Trust by <br /> Thousands of Events
         </h2>
+        <EventsCollection
+        data={events.results}
+        emptyTitle="No events have been created yet"
+        subEmptyTitle="Come Back Later"
+        page={1}
+        limit={6}
+        totalPages={2}
+        type="All_Events"
+        />
       </section>
     </main>
   );
