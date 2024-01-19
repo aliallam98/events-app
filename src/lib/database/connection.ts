@@ -12,8 +12,7 @@ const DBConnection = async () => {
 
   if (cached.conn) return cached.conn;
   
-  cached.promise =
-    cached.promise ||
+  cached.promise = cached.promise ||
      await mongoose
       .connect(dataBaseUrl, {
         dbName: "Events-App",

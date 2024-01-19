@@ -35,3 +35,7 @@ export const getAllCategories = async ()=>{
     // Warning: Only plain objects can be passed to Client Components from Server Components
     return {success:true,message:"Done",results: JSON.parse(JSON.stringify(categories))}  
 }
+
+export const getCategoryByName = async (title: string) => {
+    return categoryModel.findOne({ title: { $regex: title, $options: 'i' } })
+  }

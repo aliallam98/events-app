@@ -1,10 +1,12 @@
 "use server";
 
+import { IApiFeatures } from "@/types";
 import DBConnection from "../database/connection";
 import categoryModel from "../database/models/Category.Model";
 import eventModel, { IEvent } from "../database/models/Event.Model";
 import userModel from "../database/models/User.Model";
 import { handleError } from "../utils";
+import { getCategoryByName } from "./category.actions";
 
 interface IEventParams {
   title: string;
@@ -148,10 +150,19 @@ export const getEventByUserId = async (userId: string) => {
     results: JSON.parse(JSON.stringify(events)),
   };
 };
-export const getAllEvents = async () => {
+export const getAllEvents = async (x:IApiFeatures) => {
   await DBConnection();
 
-  const events = await eventModel.find().populate([
+  if(x.conditions.category){
+    const {_id} = await getCategoryByName(x.conditions.category)
+    if(_id){
+      x.conditions.categoryId = _id.toString()
+      delete x.conditions.category
+    }
+  }
+
+  const events = await eventModel.find(x.conditions).skip(x.skip).limit(x.limit).sort(x.sort)
+  .populate([
     { path: "organizer", select: "firstName lastName" },
     { path: "categoryId", model: categoryModel, select: "title" },
   ]);

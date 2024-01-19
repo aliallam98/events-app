@@ -143,3 +143,17 @@ export type CreateUserParams = {
     params: { id: string }
     searchParams: { [key: string]: string | string[] | undefined }
   }
+
+  export interface IApiFeatures{
+    conditions: {
+      query?:string
+      category?:string
+      categoryId?:string
+    }
+    page: number,
+    skip: number,
+    limit: number,
+    sort: string,
+    order: string,
+    fields: [] | string| undefined
+  } 

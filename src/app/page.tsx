@@ -1,11 +1,18 @@
+import FilterByCategory from "@/components/FilterByCategory";
+import SearchInput from "@/components/SearchInput";
 import EventsCollection from "@/components/events/EventsCollection";
 import { Button } from "@/components/ui/button";
 import { getAllEvents } from "@/lib/actions/event.actions";
+import { ApiFeatures } from "@/lib/utils";
+import { SearchParamProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 
-export default async function Home() {
-  const events = await getAllEvents()
+export default async function Home({searchParams}:SearchParamProps) {
+
+  const x = ApiFeatures(searchParams)
+
+  const events = await getAllEvents(x)
   return (
     <main className="h-full">
       <section className="h-[100vh]  md:h-[70vh] bg-primary/5 bg-contain ">
@@ -39,6 +46,10 @@ export default async function Home() {
         <h2 className="font-bold text-4xl">
           Trust by <br /> Thousands of Events
         </h2>
+        <div>
+          <SearchInput/>
+          <FilterByCategory/>
+        </div>
         <EventsCollection
         data={events.results}
         emptyTitle="No events have been created yet"

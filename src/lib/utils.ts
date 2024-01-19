@@ -61,6 +61,8 @@ export const formatPrice = (price: string) => {
 
 export function formUrlQuery({ params, key, value }: UrlQueryParams) {
   const currentUrl = qs.parse(params)
+  console.log(currentUrl);
+  
 
   currentUrl[key] = value
 
@@ -94,4 +96,51 @@ export function removeKeysFromQuery({ params, keysToRemove }: RemoveUrlQueryPara
 export const handleError = (error: unknown) => {
   console.error(error)
   // throw new Error(typeof error === 'string' ? error : JSON.stringify(error))
+}
+
+
+export const ApiFeatures = (reqQuery:any)=>{
+  console.log(reqQuery);
+  
+    let {query,sort,order,page,limit,fields,...filters} = reqQuery
+    let conditions :any = {}
+        // Search
+        if(query && query !== '' ){
+            conditions.$or = [
+                { title: { $regex: query , $options:"i" } },
+                { description: { $regex: query , $options:"i" } }
+              ]
+        }
+        // Filter
+        if(filters){
+            let queryFiltersCopy = {...filters}
+            queryFiltersCopy = JSON.parse(JSON.stringify(queryFiltersCopy).replace(/(gt|gte|lt|lte)/g, (match) => `$${match}`))
+            conditions = {...conditions , ...queryFiltersCopy}
+        }
+
+         sort = reqQuery.sort || 'createdAt';
+         order = reqQuery.order || 'desc';
+
+
+    
+        // Pagination
+        console.log(page);
+        // page = parseInt(page)
+        console.log(page);
+        if (page <= 0 || !page) page = 1;   
+    
+        // limit = parseInt(limit)
+        if (limit <= 0 || !limit) limit = 5;
+        const skip = (page - 1) * limit
+
+        return {
+          conditions,
+            page,
+            skip,
+            limit,
+            sort,
+            order,
+            fields
+        }
+    
 }

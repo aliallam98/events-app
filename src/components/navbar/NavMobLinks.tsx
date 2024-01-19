@@ -50,7 +50,7 @@ const NavMobLinks = () => {
         </SheetHeader>
         <SheetFooter className="mt-20">
           {user.isSignedIn ? (
-            <SignOutButton>
+            <SignOutButton >
               <Button className="border w-full ">Log Out</Button>
             </SignOutButton>
           ) : (
