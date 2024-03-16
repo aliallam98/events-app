@@ -14,7 +14,7 @@ Check It Now .
 * edgestore
 
 
-![picture alt](https://drive.google.com/file/d/1AHndx9hDL4AKspTn1ohlK383hR-Hg3Zw/view?usp=sharing/200x200 "Title is optional")
+![picture alt](https://drive.google.com/file/d/1AHndx9hDL4AKspTn1ohlK383hR-Hg3Zw/view?usp=sharing "Title is optional")
 ![picture alt](https://drive.google.com/file/d/1Pt3N3F8D8SpFS66zTLuAWcNJbY4keggF/view?usp=sharing/200x200 "Title is optional")
 ![picture alt](https://drive.google.com/file/d/16ES4xNKcecWtwrR_vjAYTQCRHCASjqgo/view?usp=sharing/200x200 "Title is optional")
 ![picture alt](https://drive.google.com/file/d/18cgtN3PcIdinWVLt5D1x7IUkwuS0TEps/view?usp=sharing/200x200 "Title is optional")
