@@ -1,15 +1,17 @@
-# Demo Link  : ## https://events-app-rosy.vercel.app/  Check It Now . 
+# Demo Link  : 
+## https://events-app-rosy.vercel.app/ 
+Check It Now . 
 
 # Stack Tech 
-*Node.js
-*Next.js
-*TypeScript
-*TailwindCSS
-*Stripe
-*Zod
-*React Hook Form
-*Shadcn
-*edgestore
+* Node.js
+* Next.js
+* TypeScript
+* TailwindCSS
+* Stripe
+* Zod
+* React Hook Form
+* Shadcn
+* edgestore
 
 
 ![picture alt](https://drive.google.com/file/d/1AHndx9hDL4AKspTn1ohlK383hR-Hg3Zw/view?usp=sharing/200x200 "Title is optional")
