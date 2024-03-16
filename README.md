@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Demo Link # : ## https://events-app-rosy.vercel.app/ ## Check It Now . 
 
-## Getting Started
+# Stack Tech #
+*Node.js
+*Next.js
+*TypeScript
+*TailwindCSS
+*Stripe
+*Zod
+*React Hook Form
+*Shadcn
+*edgestore
+![picture alt](https://drive.google.com/file/d/1AHndx9hDL4AKspTn1ohlK383hR-Hg3Zw/view?usp=sharing/200x200 "Title is optional")
+![picture alt](https://drive.google.com/file/d/1Pt3N3F8D8SpFS66zTLuAWcNJbY4keggF/view?usp=sharing/200x200 "Title is optional")
+![picture alt](https://drive.google.com/file/d/16ES4xNKcecWtwrR_vjAYTQCRHCASjqgo/view?usp=sharing/200x200 "Title is optional")
+![picture alt](https://drive.google.com/file/d/18cgtN3PcIdinWVLt5D1x7IUkwuS0TEps/view?usp=sharing/200x200 "Title is optional")
+![picture alt](https://drive.google.com/file/d/1sQCaTq5avPSvtbsmWa0_vRjhvQ-kgPsj/view?usp=sharing/200x200 "Title is optional")
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## .env variables ##
+`
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+MONGO_DB_URL = 
 
-## Learn More
+EDGE_STORE_ACCESS_KEY=
+EDGE_STORE_SECRET_KEY=
 
-To learn more about Next.js, take a look at the following resources:
+WEBHOOK_SECRET =
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+NEXT_PUBLIC_SERVER_URL =
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+ STRIPE_WEBHOOK_SECRET=
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+`
