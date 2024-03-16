@@ -4,6 +4,7 @@ import EventsCollection from "@/components/events/EventsCollection";
 import { Button } from "@/components/ui/button";
 import { getEventById, getRelatedEvents } from "@/lib/actions/event.actions";
 import { formatDateTime } from "@/lib/utils";
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -17,13 +18,15 @@ interface IParams {
 }
 
 const EventPage = async ({ params: { id } }: IParams) => {
+  const { sessionClaims } = auth();
+  const userId = sessionClaims?.userId;
 
   const event = await getEventById(id);
   const categoryId = event.results.categoryId;
   const relatedEvents = await getRelatedEvents(id, categoryId);
+  const isEventCreator = userId === event?.results.organizer?._id?.toString();
 
   const isFree = event.results.isFree;
-  
 
   return (
     <>
@@ -42,7 +45,7 @@ const EventPage = async ({ params: { id } }: IParams) => {
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
               <div className="flex gap-4">
                 <p className="bg-emerald-100 rounded-2xl p-2">
-                  {isFree ? "Free"  : `$${event.results.price}`}
+                  {isFree ? "Free" : `$${event.results.price}`}
                 </p>
                 <p className="bg-neutral-600/10 rounded-2xl p-2">
                   {event.results.categoryId.title}
@@ -55,9 +58,23 @@ const EventPage = async ({ params: { id } }: IParams) => {
             </div>
 
             {/* Buy A Ticket */}
-            <CheckoutButtons
-            event={event.results}
-            />
+            {isEventCreator ? (
+              <Link
+                href={`/orders?eventId=${event?.results._id}`}
+                className="flex gap-2 border w-fit py-2 px-6 rounded-md"
+                role={"button"}
+              >
+                <p className="text-primary-500">Order Details</p>
+                <Image
+                  src="/assets/icons/arrow.svg"
+                  alt="search"
+                  width={10}
+                  height={10}
+                />
+              </Link>
+            ) : (
+              <CheckoutButtons event={event.results} />
+            )}
 
             <div className="flex gap-2">
               <Image

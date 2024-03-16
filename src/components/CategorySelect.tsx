@@ -45,12 +45,11 @@ import { ICategory } from "@/lib/database/models/Category.Model";
 const CategorySelect = ({ value, onChangeHandler }: any) => {
   const [category, setCategory] = useState<ICategory[]>([]);
   console.log(value);
-  
 
   useEffect(() => {
     const getCategories = async () => {
-      const allCategories = await getAllCategories()
-      setCategory(allCategories.results)
+      const allCategories = await getAllCategories();
+      setCategory(allCategories.results);
     };
     getCategories();
   }, []);
@@ -66,11 +65,11 @@ const CategorySelect = ({ value, onChangeHandler }: any) => {
     const promise = new Promise(async (resolve, reject) => {
       const category = await createNewCategory({
         categoryName: values.title,
-      })
+      });
 
       if (category.success) {
         resolve(category.message);
-        setCategory((prev)=>[...prev,category.results as ICategory])
+        setCategory((prev) => [...prev, category.results as ICategory]);
         form.reset();
       } else {
         reject(category.message);
@@ -85,8 +84,9 @@ const CategorySelect = ({ value, onChangeHandler }: any) => {
       duration: 2000,
     });
   }
+
   return (
-    <Select onValueChange={onChangeHandler} defaultValue={value}>
+    <Select onValueChange={onChangeHandler} defaultValue={value._id}>
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Category" />
       </SelectTrigger>
@@ -97,7 +97,9 @@ const CategorySelect = ({ value, onChangeHandler }: any) => {
           </SelectItem>
         ))}
         <AlertDialog>
-          <AlertDialogTrigger>Add New Category</AlertDialogTrigger>
+          <AlertDialogTrigger className="p-2 text-center w-full">
+            Add New Category
+          </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle className="text-center mb-2">
@@ -134,14 +136,3 @@ const CategorySelect = ({ value, onChangeHandler }: any) => {
 };
 
 export default CategorySelect;
-
-
-
-
-
-
-
-
-
-
-

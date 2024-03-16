@@ -13,11 +13,11 @@ const Navbar = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 w-full p-5   backdrop-blur-sm z-50",
+        "fixed top-0 w-full py-5   backdrop-blur-sm z-50",
         isScroll && "shadow-sm border-b "
       )}
     >
-      <nav className="flex items-center justify-between">
+      <nav className="container max-w-[1140px] flex items-center justify-between">
         <Logo />
         <NavLinks />
         <UserButtons/>

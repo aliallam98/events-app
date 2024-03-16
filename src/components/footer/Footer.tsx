@@ -1,9 +1,23 @@
-import React from 'react'
+import React from "react";
+import { Button } from "../ui/button";
+import Logo from "../Logo";
 
 const Footer = () => {
   return (
-    <footer className="p-6 bg-purple-600/10">Footer</footer>
-  )
-}
+    <footer className="p-6 border-t ">
+      <div className="container max-w-[1140px] flex justify-between items-center ">
+        <Logo />
+        <div className="flex items-center  text-muted-foreground">
+          <Button size="sm" variant="ghost">
+            Privacy Policy
+          </Button>
+          <Button size="sm" variant="ghost">
+            Terms & Conditions
+          </Button>
+        </div>
+      </div>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;

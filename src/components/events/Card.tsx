@@ -17,9 +17,13 @@ interface IProps {
 const Card = ({ event, hidePrice, hasOrderLink }: IProps) => {
   const { sessionClaims } = auth();
   const userId = sessionClaims?.userId as string;
-  const isEventCreator = userId === event._id.toString();
 
-  
+  const isEventCreator = userId === event?.organizer?._id?.toString();
+  // const isEventCreator = userId === event.organizer.toString()
+
+  if (!event) {
+    return null;
+  }
 
   return (
     <article
@@ -30,15 +34,15 @@ const Card = ({ event, hidePrice, hasOrderLink }: IProps) => {
       {isEventCreator && (
         <div className="absolute w-fit flex gap-x-2 top-4 right-4">
           <Link
-            href={`/events/${event._id}/update`}
+            href={`/events/${event?._id}/update`}
             className="p-1 bg-neutral-300/50 rounded-lg"
           >
             <Edit size={18} />
           </Link>
-          <DeleteBtn id={event._id} />
+          <DeleteBtn id={event?._id} />
         </div>
       )}
-      <Link href={`/events/${event._id}`}>
+      <Link href={`/events/${event?._id}`}>
         <Image
           src={`${event.imageUrl?.[0]}`}
           width={300}
@@ -52,24 +56,25 @@ const Card = ({ event, hidePrice, hasOrderLink }: IProps) => {
         {!hidePrice && (
           <div className="flex gap-x-4 mt-2">
             <p className="bg-emerald-100 rounded-md p-1">
-              {event.isFree ? "Free" : `$${event.price}`}
+              {event?.isFree ? "Free" : `$${event?.price}`}
             </p>
             <p className="bg-neutral-600/10 rounded-md p-1">
-              {event.categoryId.title}
+              {event?.categoryId.title}
             </p>
           </div>
         )}
 
-        <p className="my-1">{formatDateTime(event.startDateTime).dateTime}</p>
+        <p className="my-1">{formatDateTime(event?.startDateTime).dateTime}</p>
 
-        <h2 className="font-semibold truncate">{event.title}</h2>
+        <h2 className="font-semibold truncate">{event?.title}</h2>
 
         <div className="w-full flex justify-between items-center">
           <p>
-            By : {`${event.organizer.firstName} | ${event.organizer.lastName}`}
+            By :{" "}
+            {`${event?.organizer.firstName} | ${event?.organizer.lastName}`}
           </p>
           {hasOrderLink && (
-            <Link href={`/orders?eventId=${event._id}`} className="flex gap-2">
+            <Link href={`/orders?eventId=${event?._id}`} className="flex gap-2">
               <p className="text-primary-500">Order Details</p>
               <Image
                 src="/assets/icons/arrow.svg"

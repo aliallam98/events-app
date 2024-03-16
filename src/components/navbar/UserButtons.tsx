@@ -18,11 +18,13 @@ const UserButtons = () => {
         )}
       </SignedIn>
       <SignedOut>
+        <Link href={"/sign-up"}>
+          <Button>Register</Button>
+        </Link>
         <Link href={"/sign-in"}>
-          <Button
-          variant={"ghost"}
-          className="hover:bg-primary/5"
-          >Login</Button>
+          <Button variant={"ghost"} className="hover:bg-primary/5">
+            Login
+          </Button>
         </Link>
       </SignedOut>
 

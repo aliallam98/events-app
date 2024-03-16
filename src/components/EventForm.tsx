@@ -21,7 +21,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { Textarea } from "@/components/ui/textarea";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -36,14 +36,18 @@ import { Event } from "@/types";
 import { createNewEvent } from "@/lib/actions/event.actions";
 import { auth, useUser } from "@clerk/nextjs";
 import { IEvent } from "@/lib/database/models/Event.Model";
+import { useRouter } from "next/navigation";
 
 interface IProps {
   type: string;
   event?: Event;
 }
 
-const EventForm = ({ type ,event}: IProps) => {
+const EventForm = ({ type, event }: IProps) => {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const { user } = useUser();
+
   const userId = user?.publicMetadata.userId as string;
 
   const [fileStates, setFileStates] = useState<FileState[]>([]);
@@ -82,8 +86,6 @@ const EventForm = ({ type ,event}: IProps) => {
           endDateTime: new Date(event.endDateTime),
         }
       : eventDefaultValues;
-    console.log(event && type === "update");
-    console.log(initValues);
 
   const form = useForm<z.infer<typeof createEventSchema>>({
     resolver: zodResolver(createEventSchema),
@@ -103,7 +105,6 @@ const EventForm = ({ type ,event}: IProps) => {
                 file: addedFileState.file,
                 onProgressChange: async (progress) => {
                   updateFileProgress(addedFileState.key, progress);
-                  console.log(progress);
                   if (progress === 100) {
                     // Wait 1 second before setting to COMPLETE
                     // to display 100% progress bar
@@ -112,15 +113,21 @@ const EventForm = ({ type ,event}: IProps) => {
                   }
                 },
               });
-              console.log(res);
               productImages.push(res.url);
             })
           );
           values.imageUrl = productImages;
-          await createNewEvent(values, userId);
+          const event = startTransition(async () => {
+            await createNewEvent(values, userId);
+          });
+          console.log(event);
+
+          toast.success("Event Has Created");
+          // router.push(event?.results._id);
         }
       } catch (err) {
-        console.error("Error during file uploads:", err);
+        toast.error("Error during Create Event:");
+        console.log(err);
       }
     }
   }
@@ -129,7 +136,7 @@ const EventForm = ({ type ,event}: IProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 max-w-xl mx-auto mt-6"
+        className="space-y-8 max-w-xl mx-auto mt-6 py-10 px-5"
       >
         {/* Title Input */}
         <FormField
@@ -138,7 +145,11 @@ const EventForm = ({ type ,event}: IProps) => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Event Title" {...field} />
+                <Input
+                  placeholder="Event Title"
+                  {...field}
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage className="absolute" />
             </FormItem>
@@ -154,6 +165,7 @@ const EventForm = ({ type ,event}: IProps) => {
                 <CategorySelect
                   onChangeHandler={field.onChange}
                   value={field.value}
+                  disabled={isPending}
                 />
               </FormControl>
               <FormMessage className="absolute" />
@@ -173,6 +185,7 @@ const EventForm = ({ type ,event}: IProps) => {
                     placeholder="Description"
                     className="resize-none"
                     {...field}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage className="absolute" />
@@ -197,6 +210,7 @@ const EventForm = ({ type ,event}: IProps) => {
                     onChange={(files) => {
                       setFileStates(files);
                     }}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage className="absolute" />
@@ -205,22 +219,23 @@ const EventForm = ({ type ,event}: IProps) => {
           />
         </div>
         {/* Start Data */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-6 md:flex-row items-center justify-between">
           <FormField
             control={form.control}
             name="startDateTime"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem className="flex flex-col w-full">
                 <FormLabel>Start Date Time</FormLabel>
                 {/* <CalendarIcon  size={18} className="relative left-48 top-[37px] z-50 text-muted-foreground"/> */}
                 <FormControl>
                   <DatePicker
-                    className="border rounded-md p-2 outline-none"
+                    className="border rounded-md p-2 outline-none w-full"
                     selected={field.value}
                     onChange={field.onChange}
                     showTimeSelect
                     dateFormat="Pp"
                     minDate={new Date()}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage className="absolute" />
@@ -231,17 +246,18 @@ const EventForm = ({ type ,event}: IProps) => {
             control={form.control}
             name="endDateTime"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem className="flex flex-col w-full">
                 <FormLabel>End Date Time</FormLabel>
                 {/* <CalendarIcon  size={18} className="relative left-48 top-[37px] z-50 text-muted-foreground"/> */}
                 <FormControl>
                   <DatePicker
-                    className="border rounded-md p-2 outline-none"
+                    className="border rounded-md p-2 outline-none w-full"
                     selected={field.value}
                     onChange={field.onChange}
                     showTimeSelect
                     dateFormat="Pp"
                     minDate={new Date()}
+                    disabled={isPending}
                   />
                 </FormControl>
                 <FormMessage className="absolute" />
@@ -264,7 +280,12 @@ const EventForm = ({ type ,event}: IProps) => {
                 src={"/assets/icons/location-grey.svg"}
               />
               <FormControl>
-                <Input placeholder="Location" {...field} className="pl-10" />
+                <Input
+                  placeholder="Location"
+                  {...field}
+                  className="pl-10"
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage className="absolute" />
             </FormItem>
@@ -290,6 +311,7 @@ const EventForm = ({ type ,event}: IProps) => {
                     placeholder="price"
                     {...field}
                     className="pl-10 pr-20 !m-0"
+                    disabled={isPending}
                   />
                 </FormControl>
 
@@ -307,6 +329,7 @@ const EventForm = ({ type ,event}: IProps) => {
                   <Checkbox
                     checked={field.value}
                     onCheckedChange={field.onChange}
+                    disabled={isPending}
                   />
                 </FormControl>
               </FormItem>
@@ -328,14 +351,19 @@ const EventForm = ({ type ,event}: IProps) => {
                 src={"/assets/icons/link.svg"}
               />
               <FormControl>
-                <Input placeholder="Url" {...field} className="pl-10" />
+                <Input
+                  placeholder="Url"
+                  {...field}
+                  className="pl-10"
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage className="absolute" />
             </FormItem>
           )}
         />
 
-        <Button className=" w-full" type="submit">
+        <Button className=" w-full" type="submit" disabled={isPending}>
           Submit
         </Button>
       </form>

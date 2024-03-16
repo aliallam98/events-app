@@ -47,7 +47,7 @@ const FilterByCategory = () => {
   }
   return (
     <Select onValueChange={(value:string)=>onSelectHandler(value)}>
-      <SelectTrigger className="flex items-center gap-2 w-full md:max-w-[400px] bg-purple-100 rounded-3xl px-4">
+      <SelectTrigger className="flex items-center gap-2 w-full md:max-w-[400px] bg-neutral-100  rounded-3xl px-4">
         <SelectValue placeholder="Category" />
       </SelectTrigger>
       <SelectContent >

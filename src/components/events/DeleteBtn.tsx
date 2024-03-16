@@ -13,15 +13,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { deleteEventById } from "@/lib/actions/event.actions";
 import { Trash } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useTransition } from "react";
 
 interface IProps {
   id: string;
 }
 const DeleteBtn = ({ id }: IProps) => {
+  const pathname = usePathname()
   const [isPending, startTransition] = useTransition();
   const onDeleteHandler = async () => {
-    await deleteEventById(id);
+    await deleteEventById(id,pathname);
   };
   return (
     <AlertDialog>

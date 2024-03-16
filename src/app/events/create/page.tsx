@@ -3,11 +3,11 @@ import React from "react";
 
 const CreateEventPage = () => {
   return (
-    <section className="mt-32">
-      <h2 className="font-semibold text-xl text-center">Create An Event</h2>
-      <EventForm
-      type={"Create"}
-      />
+    <section className="mt-32 pb-10">
+      <div className="container">
+        <h2 className="font-semibold text-xl text-center">Create An Event</h2>
+        <EventForm type={"Create"} />
+      </div>
     </section>
   );
 };

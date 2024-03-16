@@ -61,11 +61,7 @@ export const formatPrice = (price: string) => {
 
 export function formUrlQuery({ params, key, value }: UrlQueryParams) {
   const currentUrl = qs.parse(params)
-  console.log(currentUrl);
-  
-
   currentUrl[key] = value
-
   return qs.stringifyUrl(
     {
       url: window.location.pathname,
@@ -100,7 +96,6 @@ export const handleError = (error: unknown) => {
 
 
 export const ApiFeatures = (reqQuery:any)=>{
-  console.log(reqQuery);
   
     let {query,sort,order,page,limit,fields,...filters} = reqQuery
     let conditions :any = {}
@@ -124,13 +119,11 @@ export const ApiFeatures = (reqQuery:any)=>{
 
     
         // Pagination
-        console.log(page);
-        // page = parseInt(page)
-        console.log(page);
+        //  page = parseInt(page)
         if (page <= 0 || !page) page = 1;   
     
         // limit = parseInt(limit)
-        if (limit <= 0 || !limit) limit = 5;
+        if (limit <= 0 || !limit) limit = 6;
         const skip = (page - 1) * limit
 
         return {

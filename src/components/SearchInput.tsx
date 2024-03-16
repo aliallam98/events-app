@@ -9,16 +9,19 @@ import { Input } from "./ui/input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 
-const SearchInput = ({placeholder = "Search title..."}:{placeholder?:string}) => {
+const SearchInput = ({
+  placeholder = "Search title...",
+}: {
+  placeholder?: string;
+}) => {
   const [searchKey, serSearchKey] = useState("");
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   useEffect(() => {
     let newUrl = "";
-    
-    const delayDebounceFunction: any = setTimeout(() => {
 
+    const delayDebounceFunction: any = setTimeout(() => {
       if (searchKey) {
         newUrl = formUrlQuery({
           params: searchParams.toString(),
@@ -32,16 +35,14 @@ const SearchInput = ({placeholder = "Search title..."}:{placeholder?:string}) =>
         });
       }
 
-      router.push(newUrl,{scroll:false});
+      router.push(newUrl, { scroll: false });
     }, 300);
 
-    
-
-    return ()=> clearTimeout(delayDebounceFunction);
+    return () => clearTimeout(delayDebounceFunction);
   }, [searchKey, searchParams, router]);
 
   return (
-    <div className="flex items-center gap-2 w-full md:max-w-[400px] bg-purple-100 rounded-3xl px-4">
+    <div className="flex items-center gap-2 w-full md:max-w-[400px] bg-neutral-100 rounded-3xl px-4">
       <Search size={20} />
       <Input
         className="bg-transparent border-none"
