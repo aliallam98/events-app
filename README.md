@@ -1,6 +1,6 @@
-# Demo Link # : ## https://events-app-rosy.vercel.app/ ## Check It Now . 
+# Demo Link  : ## https://events-app-rosy.vercel.app/  Check It Now . 
 
-# Stack Tech #
+# Stack Tech 
 *Node.js
 *Next.js
 *TypeScript
@@ -10,6 +10,8 @@
 *React Hook Form
 *Shadcn
 *edgestore
+
+
 ![picture alt](https://drive.google.com/file/d/1AHndx9hDL4AKspTn1ohlK383hR-Hg3Zw/view?usp=sharing/200x200 "Title is optional")
 ![picture alt](https://drive.google.com/file/d/1Pt3N3F8D8SpFS66zTLuAWcNJbY4keggF/view?usp=sharing/200x200 "Title is optional")
 ![picture alt](https://drive.google.com/file/d/16ES4xNKcecWtwrR_vjAYTQCRHCASjqgo/view?usp=sharing/200x200 "Title is optional")
@@ -18,8 +20,9 @@
 
 
 
-## .env variables ##
-`
+## Setup .env file
+
+```
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
 
@@ -39,7 +42,5 @@ NEXT_PUBLIC_SERVER_URL =
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
 STRIPE_SECRET_KEY=
 
-
- STRIPE_WEBHOOK_SECRET=
-
-`
+STRIPE_WEBHOOK_SECRET=
+```
